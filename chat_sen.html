@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Búsqueda - Análisis de Texto</title>
+    <title>Chatbot Interactivo - Análisis de Texto</title>
     <style>
         * {
             margin: 0;
@@ -68,7 +68,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             animation: fadeInDown 0.8s ease;
         }
 
@@ -111,14 +111,17 @@
             color: #64748b;
         }
 
-        .content-wrapper {
+        /* Chatbot Container */
+        .chatbot-container {
             background: rgba(30, 41, 59, 0.4);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 50px;
+            padding: 30px;
             border: 1px solid rgba(139, 92, 246, 0.2);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: fadeInUp 1s ease;
+            max-width: 800px;
+            margin: 0 auto 40px;
         }
 
         @keyframes fadeInUp {
@@ -132,78 +135,142 @@
             }
         }
 
-        .tema-titulo {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 40px;
+        .chatbot-header {
             text-align: center;
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
         }
 
-        .tema-titulo::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .tema-titulo h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            color: #e2e8f0;
-            margin-bottom: 15px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-
-        .tema-titulo p {
-            font-size: 1.2rem;
+        .chatbot-header h2 {
+            font-size: 1.8rem;
             color: #a78bfa;
-            font-weight: 600;
-            letter-spacing: 2px;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 10px;
         }
 
-        .section {
+        .chatbot-header p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
             background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             border: 1px solid rgba(139, 92, 246, 0.15);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-right: auto;
+        }
+
+        .message.user {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .message.bot .message-label {
+            color: #a78bfa;
+        }
+
+        .message.user .message-label {
+            color: #60a5fa;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
-        .section:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
-        .section h3 {
+        .send-button {
+            padding: 15px 30px;
+            background: rgba(139, 92, 246, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 12px;
+            color: #a78bfa;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .code-section {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-top: 40px;
+        }
+
+        .section-title {
             color: #a78bfa;
             font-size: 1.8rem;
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 2px solid rgba(139, 92, 246, 0.3);
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .code-container {
@@ -214,140 +281,14 @@
             margin-top: 20px;
             border: 1px solid rgba(139, 92, 246, 0.2);
             box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-
-        .code-container::before {
-            content: 'Python';
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 0.75rem;
-            color: #64748b;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .code-container pre {
             margin: 0;
             color: #e2e8f0;
             font-family: 'Fira Code', 'Courier New', Courier, monospace;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-
-        .code-container code {
-            display: block;
-        }
-
-        .keyword { color: #c792ea; font-weight: 600; }
-        .function { color: #82aaff; }
-        .string { color: #c3e88d; }
-        .comment { color: #546e7a; }
-        .number { color: #f78c6c; }
-        .operator { color: #89ddff; }
-
-        .glosario-item {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(10px);
-            border-left: 4px solid #8b5cf6;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        .glosario-item:hover {
-            transform: translateX(8px);
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
-            border-color: rgba(139, 92, 246, 0.5);
-            background: rgba(30, 41, 59, 0.7);
-        }
-
-        .glosario-item h4 {
-            color: #a78bfa;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            font-family: 'Fira Code', 'Courier New', Courier, monospace;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .glosario-item h4::before {
-            content: '▸';
-            color: #8b5cf6;
-            font-size: 1.2rem;
-        }
-
-        .glosario-item p {
-            color: #cbd5e1;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            border-radius: 12px;
-            color: #a78bfa;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-bottom: 30px;
-        }
-
-        .back-button:hover {
-            background: rgba(139, 92, 246, 0.3);
-            transform: translateX(-5px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .back-button::before {
-            content: '←';
-            font-size: 1.2rem;
-        }
-
-        @media (max-width: 768px) {
-            .content-wrapper {
-                padding: 30px 20px;
-            }
-
-            .tema-titulo {
-                padding: 25px 20px;
-            }
-
-            .section {
-                padding: 25px 20px;
-            }
-
-            .section h3 {
-                font-size: 1.5rem;
-            }
-
-            .glosario-item {
-                padding: 20px;
-            }
-
-            .code-container {
-                padding: 20px 15px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         ::-webkit-scrollbar {
@@ -368,6 +309,28 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(139, 92, 246, 0.7);
         }
+
+        @media (max-width: 768px) {
+            .chatbot-container {
+                padding: 20px;
+            }
+
+            .chat-messages {
+                height: 300px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-input-container {
+                flex-direction: column;
+            }
+
+            .send-button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -376,198 +339,216 @@
     <div class="container">
         <div class="header">
             <div class="badge">🎓 Especialidad de IA del CBTIS 144</div>
-            <h1>Realizado por: NOE DE JESUS GONZALEZ ESPINOSA</h1>
+            <h1>NOE DE JESUS GONZALEZ ESPINOSA</h1>
             <p>Procesamiento de Lenguaje Natural con Python</p>
         </div>
 
-        <div class="content-wrapper">
-            <a href="#" class="back-button">Volver al catálogo</a>
-
-            <div class="tema-titulo">
-                <h2>Tema 12: Chat bot</h2>
-                <p>🔍 BÚSQUEDA</p>
+        <div class="chatbot-container">
+            <div class="chatbot-header">
+                <h2>🤖 Chatoo - Tu Chatbot de Confianza</h2>
+                <p>Escribe "salir" para terminar la conversación</p>
             </div>
 
-            <div class="section">
-                <h3>🔍 BÚSQUEDA</h3>
-                <div class="code-container">
-                    <pre><code>frase<span class="operator">=</span><span class="string">"python es divertido y poderoso"</span>
-buscada<span class="operator">=</span><span class="string">"python"</span>
-
-<span class="keyword">if</span> buscada.<span class="function">lower</span>() <span class="keyword">in</span> frase.<span class="function">lower</span>():
-    <span class="function">print</span>(<span class="string">"la palabra esta en la frase"</span>)
-<span class="keyword">else</span>:
-    <span class="function">print</span>(<span class="string">"no se encuentra la palabra"</span>)</code></pre>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-label">Chatoo:</div>
+                    <div>Hola soy Chatoo, tu chatbot de confianza. Si deseas terminar, escribe 'salir'. 😊</div>
                 </div>
             </div>
 
-            <div class="section">
-                <h3>🤖 Código Completo del Chatbot</h3>
-                <div class="code-container">
-                    <pre><code><span class="keyword">import</span> random
-<span class="keyword">from</span> textblob <span class="keyword">import</span> TextBlob
-<span class="keyword">from</span> deep_translator <span class="keyword">import</span> GoogleTranslator
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="userInput" placeholder="Escribe tu mensaje aquí...">
+                <button class="send-button" onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
 
-<span class="comment"># Listas de saludos y respuestas</span>
-saludos <span class="operator">=</span> [<span class="string">"hola"</span>, <span class="string">"que tal"</span>, <span class="string">"buenos dias"</span>, <span class="string">"buenas tardes"</span>, <span class="string">"buen dia"</span>]
-respuestas_saludos <span class="operator">=</span> [
-    <span class="string">"¡Hola! ¿Cómo estás?"</span>,
-    <span class="string">"¡Hola, qué gusto verte!"</span>,
-    <span class="string">"¡Qué hay!"</span>,
-    <span class="string">"¡Hola! Espero que estés bien "</span>
+        <div class="code-section">
+            <h3 class="section-title">📝 Código Python Original</h3>
+            <div class="code-container">
+                <pre><code>import random
+from textblob import TextBlob
+from deep_translator import GoogleTranslator
+
+# Listas de saludos y respuestas
+saludos = ["hola", "que tal", "buenos dias", "buenas tardes", "buen dia"]
+respuestas_saludos = [
+    "¡Hola! ¿Cómo estás?",
+    "¡Hola, qué gusto verte!",
+    "¡Qué hay!",
+    "¡Hola! Espero que estés bien "
 ]
 
-despedida <span class="operator">=</span> [<span class="string">"adios"</span>, <span class="string">"bye"</span>, <span class="string">"gracias"</span>, <span class="string">"nos vemos"</span>, <span class="string">"hasta luego"</span>, <span class="string">"salir"</span>]
-respuesta_despedida <span class="operator">=</span> [
-    <span class="string">"Adiós, hasta pronto "</span>,
-    <span class="string">"Nos vemos luego "</span>,
-    <span class="string">"Fue un placer ayudarte"</span>,
-    <span class="string">"Cuídateee"</span>,
-    <span class="string">"Byeeee"</span>
+despedida = ["adios", "bye", "gracias", "nos vemos", "hasta luego", "salir"]
+respuesta_despedida = [
+    "Adiós, hasta pronto ",
+    "Nos vemos luego ",
+    "Fue un placer ayudarte",
+    "Cuídateee",
+    "Byeeee"
 ]
 
-pre1 <span class="operator">=</span> [<span class="string">"como estas"</span>]
-pre2 <span class="operator">=</span> [<span class="string">"ya comiste"</span>]
-pre3 <span class="operator">=</span> [<span class="string">"que haces"</span>]
-pre4 <span class="operator">=</span> [<span class="string">"tienes sueño"</span>]
+pre1 = ["como estas"]
+pre2 = ["ya comiste"]
+pre3 = ["que haces"]
+pre4 = ["tienes sueño"]
 
-res1 <span class="operator">=</span> [<span class="string">"Bien"</span>, <span class="string">"Mal"</span>, <span class="string">"Más o menos"</span>, <span class="string">"Normal"</span>]
-res2 <span class="operator">=</span> [<span class="string">"Sí"</span>, <span class="string">"No"</span>, <span class="string">"No tengo hambre pero gracias por preguntar "</span>]
-res3 <span class="operator">=</span> [<span class="string">"Nada"</span>, <span class="string">"Pensandooo "</span>]
-res4 <span class="operator">=</span> [<span class="string">"Nooo kjsskjkj"</span>, <span class="string">"Siii de verdad ya no aguanto de sueñoo "</span>]
+res1 = ["Bien", "Mal", "Más o menos", "Normal"]
+res2 = ["Sí", "No", "No tengo hambre pero gracias por preguntar ☺"]
+res3 = ["Nada", "Pensandooo "]
+res4 = ["Nooo kjsskjkj", "Siii de verdad ya no aguanto de sueñoo "]
 
-<span class="comment"># Mensaje de bienvenida del chatbot</span>
-<span class="function">print</span>(<span class="string">"Hola soy Chatoo, tu chatbot de confianza. Si deseas terminar, escribe 'salir'."</span>)
+print("Hola soy Chatoo, tu chatbot de confianza. Si deseas terminar, escribe 'salir'.")
 
-<span class="keyword">while</span> <span class="keyword">True</span>:
-    usuario <span class="operator">=</span> <span class="function">input</span>(<span class="string">"Tú: "</span>).<span class="function">lower</span>().<span class="function">strip</span>()
-
-    <span class="comment"># Salir</span>
-    <span class="keyword">if</span> usuario <span class="keyword">in</span> despedida:
-        <span class="function">print</span>(<span class="string">"Chatbot:"</span>, random.<span class="function">choice</span>(respuesta_despedida))
-        <span class="keyword">break</span>
-
-    <span class="comment"># Saludos</span>
-    <span class="keyword">elif</span> usuario <span class="keyword">in</span> saludos:
-        <span class="function">print</span>(<span class="string">"Chatbot:"</span>, random.<span class="function">choice</span>(respuestas_saludos))
-
-    <span class="comment"># Preguntas específicas</span>
-    <span class="keyword">elif</span> usuario <span class="keyword">in</span> pre1:
-        <span class="function">print</span>(<span class="string">"Chatbot:"</span>, random.<span class="function">choice</span>(res1))
-    <span class="keyword">elif</span> usuario <span class="keyword">in</span> pre2:
-        <span class="function">print</span>(<span class="string">"Chatbot:"</span>, random.<span class="function">choice</span>(res2))
-    <span class="keyword">elif</span> usuario <span class="keyword">in</span> pre3:
-        <span class="function">print</span>(<span class="string">"Chatbot:"</span>, random.<span class="function">choice</span>(res3))
-    <span class="keyword">elif</span> usuario <span class="keyword">in</span> pre4:
-        <span class="function">print</span>(<span class="string">"Chatbot:"</span>, random.<span class="function">choice</span>(res4))
-
-    <span class="keyword">else</span>:
-        <span class="comment"># Analizar el sentimiento con TextBlob</span>
-        <span class="keyword">try</span>:
-            <span class="comment"># Traducir al inglés para que TextBlob lo analice mejor</span>
-            texto_en_ingles <span class="operator">=</span> GoogleTranslator(source<span class="operator">=</span><span class="string">'auto'</span>, target<span class="operator">=</span><span class="string">'en'</span>).<span class="function">translate</span>(usuario)
-            blob <span class="operator">=</span> <span class="function">TextBlob</span>(texto_en_ingles)
-            sentimiento <span class="operator">=</span> blob.sentiment.polarity
-
-            <span class="keyword">if</span> sentimiento <span class="operator">></span> <span class="number">0.2</span>:
-                <span class="function">print</span>(<span class="string">"Chatbot: ¡Parece que estás feliz!  Me alegra mucho eso."</span>)
-            <span class="keyword">elif</span> sentimiento <span class="operator"><</span> <span class="operator">-</span><span class="number">0.2</span>:
-                <span class="function">print</span>(<span class="string">"Chatbot: Siento que estás un poco triste . Si quieres hablar, aquí estoy para escucharte."</span>)
-            <span class="keyword">else</span>:
-                <span class="function">print</span>(<span class="string">"Chatbot: Mmm, parece que estás neutral . Cuéntame más."</span>)
-        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:
-            <span class="function">print</span>(<span class="string">"Chatbot: No entendí muy bien lo que dijiste . ¿Podrías repetirlo?"</span>)</code></pre>
-                </div>
-            </div>
-
-            <div class="section">
-                <h3>📚 Glosario de Funciones</h3>
-
-                <div class="glosario-item">
-                    <h4>textblob</h4>
-                    <p>
-                        Se usa en Python para procesar y analizar texto fácilmente. Es muy popular en proyectos de procesamiento de lenguaje natural (NLP) porque tiene una sintaxis simple y directa, ideal para tareas básicas sin tener que usar modelos complejos.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>random</h4>
-                    <p>
-                        Módulo de Python que permite generar números aleatorios y seleccionar elementos aleatorios de listas. Se usa para hacer las respuestas del chatbot más variadas y naturales.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>random.choice()</h4>
-                    <p>
-                        Selecciona un elemento aleatorio de una lista. En este chatbot se usa para dar respuestas variadas y más naturales, evitando que siempre responda lo mismo.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>GoogleTranslator</h4>
-                    <p>
-                        Herramienta de la librería deep_translator que permite traducir texto entre idiomas. Se usa para traducir al inglés antes del análisis de sentimiento, ya que TextBlob funciona mejor con texto en inglés.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>sentiment.polarity</h4>
-                    <p>
-                        Propiedad de TextBlob que devuelve un valor entre -1 (muy negativo) y 1 (muy positivo) indicando el sentimiento del texto analizado. En el chatbot se usa para detectar si el usuario está feliz, triste o neutral.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>lower()</h4>
-                    <p>
-                        Convierte todo el texto a minúsculas. Se usa para hacer comparaciones de texto sin importar si está escrito en mayúsculas o minúsculas.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>strip()</h4>
-                    <p>
-                        Elimina los espacios en blanco al inicio y al final de un texto. Ayuda a limpiar la entrada del usuario antes de procesarla.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>while True</h4>
-                    <p>
-                        Crea un ciclo infinito que se ejecuta continuamente hasta que se use break. En el chatbot permite mantener la conversación activa hasta que el usuario decida salir.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>elif</h4>
-                    <p>
-                        Abreviatura de "else if". Permite evaluar múltiples condiciones en secuencia. Si la condición if no se cumple, evalúa la condición elif.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>else</h4>
-                    <p>
-                        La cláusula else se usa junto con if (y opcionalmente elif) para ejecutar un bloque de código cuando ninguna condición anterior se cumple.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>try-except</h4>
-                    <p>
-                        Estructura de manejo de errores. El código en el bloque try se ejecuta normalmente, pero si ocurre un error, se ejecuta el código en except en lugar de detener el programa.
-                    </p>
-                </div>
-
-                <div class="glosario-item">
-                    <h4>break</h4>
-                    <p>
-                        Palabra clave que termina un ciclo (while o for) inmediatamente. En el chatbot se usa para salir del ciclo infinito cuando el usuario dice adiós.
-                    </p>
-                </div>
+while True:
+    usuario = input("Tú: ").lower().strip()
+    
+    if usuario in despedida:
+        print("Chatbot:", random.choice(respuesta_despedida))
+        break
+    elif usuario in saludos:
+        print("Chatbot:", random.choice(respuestas_saludos))
+    elif usuario in pre1:
+        print("Chatbot:", random.choice(res1))
+    elif usuario in pre2:
+        print("Chatbot:", random.choice(res2))
+    elif usuario in pre3:
+        print("Chatbot:", random.choice(res3))
+    elif usuario in pre4:
+        print("Chatbot:", random.choice(res4))
+    else:
+        texto_en_ingles = GoogleTranslator(source='auto', target='en').translate(usuario)
+        blob = TextBlob(texto_en_ingles)
+        sentimiento = blob.sentiment.polarity
+        
+        if sentimiento > 0.2:
+            print("Chatbot: ¡Parece que estás feliz!  Me alegra mucho eso.")
+        elif sentimiento < -0.2:
+            print("Chatbot: Siento que estás un poco triste . Si quieres hablar, aquí estoy para escucharte.")
+        else:
+            print("Chatbot: Mmm, parece que estás neutral . Cuéntame más.")</code></pre>
             </div>
         </div>
     </div>
+
+    <script>
+        // Configuración del chatbot
+        const saludos = ["hola", "que tal", "buenos dias", "buenas tardes", "buen dia"];
+        const respuestas_saludos = [
+            "¡Hola! ¿Cómo estás?",
+            "¡Hola, qué gusto verte!",
+            "¡Qué hay!",
+            "¡Hola! Espero que estés bien 😊"
+        ];
+
+        const despedida = ["adios", "bye", "gracias", "nos vemos", "hasta luego", "salir"];
+        const respuesta_despedida = [
+            "Adiós, hasta pronto 👋",
+            "Nos vemos luego 😊",
+            "Fue un placer ayudarte",
+            "Cuídateee",
+            "Byeeee"
+        ];
+
+        const pre1 = ["como estas"];
+        const pre2 = ["ya comiste"];
+        const pre3 = ["que haces"];
+        const pre4 = ["tienes sueño"];
+
+        const res1 = ["Bien", "Mal", "Más o menos", "Normal"];
+        const res2 = ["Sí", "No", "No tengo hambre pero gracias por preguntar ☺"];
+        const res3 = ["Nada", "Pensandooo 🤔"];
+        const res4 = ["Nooo kjsskjkj", "Siii de verdad ya no aguanto de sueñoo 😴"];
+
+        // Palabras clave para análisis de sentimiento simple
+        const palabrasPositivas = ["feliz", "contento", "alegre", "genial", "excelente", "bien", "amor", "gusto"];
+        const palabrasNegativas = ["triste", "mal", "enojado", "terrible", "horrible", "odio", "molesto"];
+
+        function randomChoice(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function addMessage(text, isUser) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = isUser ? 'Tú:' : 'Chatoo:';
+            
+            const content = document.createElement('div');
+            content.textContent = text;
+            
+            messageDiv.appendChild(label);
+            messageDiv.appendChild(content);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function analyzeSentiment(text) {
+            const lowerText = text.toLowerCase();
+            let score = 0;
+
+            palabrasPositivas.forEach(word => {
+                if (lowerText.includes(word)) score += 1;
+            });
+
+            palabrasNegativas.forEach(word => {
+                if (lowerText.includes(word)) score -= 1;
+            });
+
+            if (score > 0) {
+                return "¡Parece que estás feliz! 😊 Me alegra mucho eso.";
+            } else if (score < 0) {
+                return "Siento que estás un poco triste 😔. Si quieres hablar, aquí estoy para escucharte.";
+            } else {
+                return "Mmm, parece que estás neutral 😐. Cuéntame más.";
+            }
+        }
+
+        function getBotResponse(userInput) {
+            const input = userInput.toLowerCase().trim();
+
+            if (despedida.includes(input)) {
+                setTimeout(() => {
+                    addMessage("La conversación ha terminado. Recarga la página para hablar de nuevo. 👋", false);
+                }, 500);
+                return randomChoice(respuesta_despedida);
+            } else if (saludos.includes(input)) {
+                return randomChoice(respuestas_saludos);
+            } else if (pre1.includes(input)) {
+                return randomChoice(res1);
+            } else if (pre2.includes(input)) {
+                return randomChoice(res2);
+            } else if (pre3.includes(input)) {
+                return randomChoice(res3);
+            } else if (pre4.includes(input)) {
+                return randomChoice(res4);
+            } else {
+                return analyzeSentiment(input);
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const userMessage = input.value.trim();
+
+            if (userMessage === '') return;
+
+            addMessage(userMessage, true);
+            input.value = '';
+
+            setTimeout(() => {
+                const botResponse = getBotResponse(userMessage);
+                addMessage(botResponse, false);
+            }, 500);
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
 </body>
 </html>
